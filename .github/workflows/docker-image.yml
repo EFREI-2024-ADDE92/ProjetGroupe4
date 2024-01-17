@@ -58,6 +58,6 @@ jobs:
               az containerapp update \
               --name groupe4containerapp \
               --resource-group ${{ secrets.RESOURCE_GROUP }} \
-              --scale-rule-name http-scale-rule \
-              --scale-rule-http-concurrency 5 \
+              --scale-trigger-name http-scale-trigger \
+              --scale-trigger-count 5 \
 
