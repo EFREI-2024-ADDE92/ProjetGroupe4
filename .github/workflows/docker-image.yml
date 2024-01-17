@@ -5,9 +5,7 @@ on:
     branches:
       - main
 
-env:
-  TEST_FULL_ACR_NAME: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-  TEST_IMAGE_REPOSITORY: github-actions/container-app
+
   
 jobs:
     build-and-deploy:
