@@ -5,7 +5,9 @@ on:
     branches:
       - main
 
-
+env:
+  TEST_FULL_ACR_NAME: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+  TEST_IMAGE_REPOSITORY: github-actions/container-app
   
 jobs:
     build-and-deploy:
@@ -34,14 +36,15 @@ jobs:
         - name: Build and deploy Container App
           uses: azure/container-apps-deploy-action@v1
           with:
-            acrName: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-            containerAppName: Groupe4Container-app
+            appSourcePath: ${{ github.workspace }}
+            acrName: efreibigdata
+            containerAppName: groupe4containerapp
             resourceGroup: ${{ secrets.RESOURCE_GROUP }}
             imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/projetirisgroupe4:${{ github.sha }}
             location: 'france central'
             targetPort: 8081
             registryUsername: ${{ secrets.REGISTRY_USERNAME }}
             registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
-            acrUsername : ${{ secrets.REGISTRY_USERNAME }}
-            acrPassword : ${{ secrets.REGISTRY_PASSWORD }}
+            acrUsername: ${{ secrets.REGISTRY_USERNAME }}
+            acrPassword: ${{ secrets.REGISTRY_PASSWORD }}
             azureCredentials : ${{ secrets.AZURE_CREDENTIALS }}
