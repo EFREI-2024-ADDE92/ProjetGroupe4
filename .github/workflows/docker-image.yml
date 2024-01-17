@@ -43,6 +43,6 @@ jobs:
             imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/projetirisgroupe4:${{ github.sha }}
             location: 'france central'
             Ports: 8081
-            registryUsername: ${{ secrets.REGISTRY_USERNAME }}
-            registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
+            acrUsername: ${{ secrets.REGISTRY_USERNAME }}
+            acrPassword: ${{ secrets.REGISTRY_PASSWORD }}
             azureCredentials : ${{ secrets.AZURE_CREDENTIALS }}
