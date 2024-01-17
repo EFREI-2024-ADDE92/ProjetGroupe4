@@ -22,12 +22,6 @@ jobs:
           with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-        - run: |
-            echo "Azure Container Registry: ${{ secrets.REGISTRY_LOGIN_SERVER }}"
-            echo "Azure Credentials: ${{ secrets.AZURE_CREDENTIALS }}"
-            echo "Docker Login Server: ${{ secrets.REGISTRY_LOGIN_SERVER }}"
-            echo "Docker Username: ${{ secrets.REGISTRY_USERNAME }}"
-          
 
         - name: 'Build and push image'
           uses: azure/docker-login@v1
@@ -48,7 +42,7 @@ jobs:
             resourceGroup: ${{ secrets.RESOURCE_GROUP }}
             imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/projetirisgroupe4:${{ github.sha }}
             location: 'france central'
-            targetPort: 8081
+            Ports: 8081
             registryUsername: ${{ secrets.REGISTRY_USERNAME }}
             registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
             azureCredentials : ${{ secrets.AZURE_CREDENTIALS }}
