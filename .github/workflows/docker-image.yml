@@ -39,10 +39,11 @@ jobs:
             appSourcePath: ${{ github.workspace }}
             acrName: ${{ secrets.REGISTRY_LOGIN_SERVER }}
             containerAppName: Groupe4Container-app
+            containerAppEnvironment :  ${{ secrets.REGISTRY_LOGIN_SERVER }}
             resourceGroup: ${{ secrets.RESOURCE_GROUP }}
             imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/projetirisgroupe4:${{ github.sha }}
             location: 'france central'
-            Ports: 8081
-            acrUsername: ${{ secrets.REGISTRY_USERNAME }}
-            acrPassword: ${{ secrets.REGISTRY_PASSWORD }}
+            targetPort: 8081
+            registryUsername: ${{ secrets.REGISTRY_USERNAME }}
+            registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
             azureCredentials : ${{ secrets.AZURE_CREDENTIALS }}
