@@ -2,7 +2,13 @@ name: Projet Build and Publish Docker Image
 
 on:
   push:
+    branches:
+      - main
 
+env:
+  TEST_FULL_ACR_NAME: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+  TEST_IMAGE_REPOSITORY: github-actions/container-app
+  
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
@@ -15,9 +21,6 @@ jobs:
           uses: azure/login@v1
           with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
-            
-        - name: 'Set up environment variables'
-          run: echo "API_KEY=${{ secrets.API_KEY }}" >> $GITHUB_ENV
 
         - name: 'Build and push image'
           uses: azure/docker-login@v1
@@ -29,15 +32,10 @@ jobs:
             docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/ProjetIrisGroupe4:${{ github.sha }}
             docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/ProjetIrisGroupe4:${{ github.sha }}
 
-        - name: 'Deploy to Azure Container Instances'
-          uses: 'azure/aci-deploy@v1'
+        - name: Build and deploy Container App
+          uses: azure/container-apps-deploy-action@v1
           with:
-            resource-group: ${{ secrets.RESOURCE_GROUP }}
-            dns-name-label: bigdata-groupe4
-            image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/ProjetIrisGroupe4:${{ github.sha }}
-            registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-            registry-username: ${{ secrets.REGISTRY_USERNAME }}
-            registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-            name: ProjetIrisGroupe4
-            location: 'france central'
-            ports: 8081
+            appSourcePath: ${{ github.workspace }}/src
+            acrName: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+            containerAppName: Groupe4Container-app
+            resourceGroup: ${{ secrets.RESOURCE_GROUP }}
