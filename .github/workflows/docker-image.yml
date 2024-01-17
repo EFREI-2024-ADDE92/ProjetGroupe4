@@ -24,7 +24,13 @@ jobs:
           with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
             version: '2022-11-01-preview'
-
+        
+        - name: 'Create Container App Environment'
+          run: |
+            az containerapp env create \
+              -g ${{ secrets.RESOURCE_GROUP }} \
+              -n groupe4containerapp \
+              --location 'france central'
 
         - name: 'Build and push image'
           uses: azure/docker-login@v1
