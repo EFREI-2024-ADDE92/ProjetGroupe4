@@ -2,8 +2,10 @@ FROM python:3.9-alpine
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir -r requirements.txt
+COPY modelApi.py ./
+COPY requirements.txt ./
+COPY iris_model ./
 
-COPY . .
+RUN pip install --no-cache-dir -r requirements.txt
 
 CMD ["python", "modelApi.py"]
