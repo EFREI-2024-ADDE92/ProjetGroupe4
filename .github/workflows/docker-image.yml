@@ -39,9 +39,9 @@ jobs:
         - name: Build and deploy Container App
           uses: azure/container-apps-deploy-action@v1
           with:
-            acrName: efreibigdata
-            containerAppEnvironment : groupe4containerapp
+            acrName: efreibigdata           
             containerAppName: groupe4containerapp
+            containerAppEnvironment : groupe4containerapp
             resourceGroup: ${{ secrets.RESOURCE_GROUP }}
             imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/projetirisgroupe4:${{ github.sha }}
             location: 'france central'
