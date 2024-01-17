@@ -58,22 +58,11 @@ jobs:
             acrPassword: ${{ secrets.REGISTRY_PASSWORD }}
             azureCredentials : ${{ secrets.AZURE_CREDENTIALS }}
 
-        - name: Azure CLI script file
-          uses: azure/CLI@v1
-          with:
-            azcliversion: 2.30.0
-            inlineScript: |
-                az extension add --name containerapp
-                az containerapp update \
-                  --name groupe4containerapp \
-                  --resource-group ${{ secrets.RESOURCE_GROUP }}
-                az containerapp autoscale create \
-                  --name groupe4containerapp \
-                  --resource-group ${{ secrets.RESOURCE_GROUP }} \
-                  --container-name groupe4containerapp \
-                  --cpu 50 \
-                  --memory 50 \
-                  --count 1 \
-                  --min-count 1 \
-                  --max-count 5 \
-                   --api-version 2022-11-01-preview
+        - name: Configure autoscaling
+          run: |
+            az extension add --name containerapp
+            az containerapp update \
+              --name groupe4containerapp \
+              --resource-group ${{ secrets.RESOURCE_GROUP }} \
+              --scale-rule-name http-scale-rule \
+              --scale-rule-http-concurrency 5 
