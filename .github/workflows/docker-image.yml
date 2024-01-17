@@ -55,9 +55,9 @@ jobs:
           with:
             azcliversion: 2.30.0
             inlineScript: |
-              az containerapp update 
-              --name groupe4containerapp
-              --resource-group ${{ secrets.RESOURCE_GROUP }}
-              --scale-rule-name http-scale-rule 
-              --scale-rule-http-concurrency 5
+              az containerapp update \
+              --name groupe4containerapp \
+              --resource-group ${{ secrets.RESOURCE_GROUP }} \
+              --scale-rule-name http-scale-rule \
+              --scale-rule-http-concurrency 5 \
 
