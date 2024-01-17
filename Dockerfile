@@ -1,11 +1,13 @@
-FROM python:3.8-slim
-
+FROM python:3.11-slim-bookworm
+ 
 WORKDIR /app
-
-COPY modelApi.py  ./
-COPY requirements.txt ./
-COPY iris_model.pkl ./
-
+ 
+COPY iris_model.pkl /app
+COPY modelApi.py /app
+COPY requirements.txt /app
+ 
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
-
+ 
+ 
 CMD ["python", "modelApi.py"]
