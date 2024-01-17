@@ -69,4 +69,5 @@ jobs:
                   --memory 50 \
                   --count 1 \
                   --min-count 1 \
-                  --max-count 5
+                  --max-count 5 \
+                   --api-version 2022-11-01-preview
