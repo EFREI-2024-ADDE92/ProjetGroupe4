@@ -14,10 +14,10 @@ jobs:
         - name: 'Checkout GitHub Action'
           uses: actions/checkout@main
 
-        # - name: 'Hadolint for check the code' 
-        #   uses: hadolint/hadolint-action@v3.1.0
-        #   with:
-        #       dockerfile: ./Dockerfile 
+        - name: 'Hadolint for check the code' 
+          uses: hadolint/hadolint-action@v3.1.0
+          with:
+              dockerfile: ./Dockerfile 
           
         - name: 'Login via Azure CLI'
           uses: azure/login@v1
