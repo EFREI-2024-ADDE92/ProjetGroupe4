@@ -66,3 +66,14 @@ jobs:
               --resource-group ${{ secrets.RESOURCE_GROUP }} \
               --scale-rule-name http-scale-rule \
               --scale-rule-http-concurrency 5 
+
+        - name: Run k6 test
+          runs-on: ubuntu-latest
+          steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Run k6 local test
+              uses: grafana/k6-action@v0.3.1
+              with:
+                filename: k6/tests/script.js
+                flags: --vus 10 --duration 30s
