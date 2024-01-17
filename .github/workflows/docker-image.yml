@@ -39,3 +39,4 @@ jobs:
             acrName: ${{ secrets.REGISTRY_LOGIN_SERVER }}
             containerAppName: Groupe4Container-app
             resourceGroup: ${{ secrets.RESOURCE_GROUP }}
+            imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/projetirisgroupe4:${{ github.sha }}
