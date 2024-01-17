@@ -43,3 +43,5 @@ jobs:
             location: 'france central'
             ports: 8081
             dns-name-label: projetirisgroupe4
+            username: ${{ secrets.REGISTRY_USERNAME }}
+            password: ${{ secrets.REGISTRY_PASSWORD }}
