@@ -23,6 +23,7 @@ jobs:
           uses: azure/login@v1
           with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
+            version: '2022-11-01-preview'
 
 
         - name: 'Build and push image'
