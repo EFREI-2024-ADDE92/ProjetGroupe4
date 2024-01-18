@@ -1,31 +1,33 @@
-version : '3'
+version: '3'
 
 networks:
-ns:
-  driver: bridge
+  iris-api-net:
+    driver: bridge
 
 services:
 
-  api:
-    build:
+  iris-api:
+    build: 
       context: .
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
     networks:
-      - ns
+      - iris-api-net
 
   prometheus:
-    image: prom/prometheus:v2.42.0
+    image: prom/prometheus:latest
     ports:
       - "9090:9090"
+    networks:
+      - iris-api-net
+    environment:
+      - TZ=Europe/Paris
     volumes:
       - ./prometheus:/etc/prometheus
-      - prometheus-data:/prometheus
-    command:
-      - '--web.enable-lifecycle'
-      - '--config.file=/etc/prometheus/prometheus.yml'
+      - prometheus_data:/prometheus
+    command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yaml
 
 volumes:
-  prometheus-data :
+  prometheus_data:
  
