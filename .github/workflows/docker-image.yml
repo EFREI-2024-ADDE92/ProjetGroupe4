@@ -29,7 +29,7 @@ jobs:
           run: |
             az containerapp env create \
               -g ${{ secrets.RESOURCE_GROUP }} \
-              -n groupe4containerapp \
+              -n groupe4containerapp-env \
               --location 'france central'
 
         - name: 'Build and push image'
@@ -47,7 +47,7 @@ jobs:
           with:
             acrName: efreibigdata           
             containerAppName: groupe4containerapp
-            containerAppEnvironment : groupe4containerapp
+            containerAppEnvironment : groupe4containerapp-bis
             resourceGroup: ${{ secrets.RESOURCE_GROUP }}
             imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/projetirisgroupe4:${{ github.sha }}
             location: 'france central'
