@@ -56,7 +56,7 @@ def result():
     # Measure the processing time
     start_time = time.time()
 
-    predictions = pickled_model.predict(np.array([[sepalLength, petalLength, sepalWidth, petalWidth]]))
+    predictions = pickled_model.predict(np.array([[sepalLength, sepalWidth, petalLength, petalWidth]]))
 
     end_time = time.time()
     processing_time = end_time - start_time
