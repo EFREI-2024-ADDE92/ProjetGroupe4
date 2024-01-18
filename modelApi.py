@@ -15,7 +15,8 @@ import prometheus_client
 from prometheus_client import Counter
 import time
 
-#creation de l'application Flask
+
+# Creation de l'application Flask
 app = Flask(__name__)
 app.json.sort_keys = False
 
