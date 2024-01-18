@@ -42,7 +42,7 @@ services:
       - ./grafana:/var/lib/grafana
       - ./grafana-provisioning:/etc/grafana/provisioning
       - grafana_data:/var/lib/grafana
-  
+
 
 volumes:
   prometheus_data:
