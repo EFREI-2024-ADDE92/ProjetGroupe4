@@ -19,12 +19,14 @@ import time
 app = Flask(__name__)
 app.json.sort_keys = False
 
-# graphs = {}
-# graphs['c'] = Counter('python_request_operations_total', 'The total number of processed requests')
 
 graphs = {
     'request_operations_total': Counter('python_request_operations_total', 'The total number of processed requests'),
-    'processing_time_seconds': prometheus_client.Summary('python_processing_time_seconds', 'Processing time of each request'),
+    'processing_time_seconds': prometheus_client.Summary('python_processing_time_seconds', 'Processing time of each prediction'),
+    'iris_virginica_predictions_total': Counter('python_iris_virginica_predictions_total', 'The total number of Iris-virginica predictions'),
+    'iris_setosa_predictions_total': Counter('python_iris_setosa_predictions_total', 'The total number of Iris-setosa predictions'),
+    'iris_versicolor_predictions_total': Counter('python_iris_versicolor_predictions_total', 'The total number of Iris-versicolor predictions')
+
 }
 
 @app.route("/metrics")
@@ -57,6 +59,19 @@ def result():
 
     end_time = time.time()
     processing_time = end_time - start_time
+
+    # Count the number of Iris-virginica predictions 
+    predicted_species = labels[predictions[0]]
+    graphs['iris_virginica_predictions_total'].inc() if predicted_species == 'Iris-virginica' else None
+
+    # Count the number of Iris-setosa predictions 
+    predicted_species = labels[predictions[0]]
+    graphs['iris_setosa_predictions_total'].inc() if predicted_species == 'Iris-setosa' else None
+
+    # Count the number of Iris-setosa predictions 
+    predicted_species = labels[predictions[0]]
+    graphs['iris_versicolor_predictions_total'].inc() if predicted_species == 'Iris-versicolor' else None
+
     
     response_data = {
         "sepalLength": sepalLength,
