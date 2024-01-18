@@ -6,15 +6,35 @@ en utilisant la philosophie DevOps sur un fournisseur de services cloud.
 Groupe 4"""
 
 #import libraries
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 import requests
 import numpy as np
 from sys import argv
 import pickle
+import prometheus_client 
+from prometheus_client import Counter
+import time
 
 #creation de l'application Flask
 app = Flask(__name__)
 app.json.sort_keys = False
+
+# graphs = {}
+# graphs['c'] = Counter('python_request_operations_total', 'The total number of processed requests')
+
+graphs = {
+    'request_operations_total': Counter('python_request_operations_total', 'The total number of processed requests'),
+    'processing_time_seconds': prometheus_client.Summary('python_processing_time_seconds', 'Processing time of each request'),
+}
+
+@app.route("/metrics")
+def requests_count():
+    res = []
+    for k, v in graphs.items():
+        res.append(prometheus_client.generate_latest(v))
+    return Response(res, mimetype="text/plain")
+
+
 
 #pour indiquer à Flask, quelle URL et méthode doivent déclencher cette fonction
 @app.route("/predict", methods=["GET"])
@@ -29,7 +49,14 @@ def result():
     petalWidth = float(request.args.get('petW'))
 
     pickled_model = pickle.load(open('iris_model.pkl', 'rb'))
+
+    # Measure the processing time
+    start_time = time.time()
+
     predictions = pickled_model.predict(np.array([[sepalLength, petalLength, sepalWidth, petalWidth]]))
+
+    end_time = time.time()
+    processing_time = end_time - start_time
     
     response_data = {
         "sepalLength": sepalLength,
@@ -38,6 +65,13 @@ def result():
         "petalWidth": petalWidth,
         "predictedSpecies" : labels[predictions[0]]
     }
+
+    # Increment the counters for each request and prediction
+    graphs['request_operations_total'].inc()
+    graphs['processing_time_seconds'].observe(processing_time)
+
+    # Simulate some processing time
+    time.sleep(0.600)
 
     return jsonify(response_data)
 
