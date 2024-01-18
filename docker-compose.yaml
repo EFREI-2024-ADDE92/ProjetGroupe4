@@ -1,0 +1,31 @@
+version : '3'
+
+networks:
+ns:
+  driver: bridge
+
+services:
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    networks:
+      - ns
+
+  prometheus:
+    image: prom/prometheus:v2.42.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    command:
+      - '--web.enable-lifecycle'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+volumes:
+  prometheus-data :
+ 
