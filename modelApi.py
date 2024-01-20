@@ -20,6 +20,7 @@ import time
 app = Flask(__name__)
 app.json.sort_keys = False
 
+pickled_model = pickle.load(open('iris_model.pkl', 'rb'))
 
 graphs = {
     'request_operations_total': Counter('python_request_operations_total', 'The total number of processed requests'),
@@ -50,8 +51,7 @@ def result():
     petalLength = float(request.args.get('petL'))
     sepalWidth = float(request.args.get('sepW'))
     petalWidth = float(request.args.get('petW'))
-
-    pickled_model = pickle.load(open('iris_model.pkl', 'rb'))
+    
 
     # Measure the processing time
     start_time = time.time()
