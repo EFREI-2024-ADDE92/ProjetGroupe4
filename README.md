@@ -1,38 +1,49 @@
 # Applications of Big Data  - Projet 
 
-## Groupe 4 :
 
-#### Frimpong ADOTRI
-#### Suvéta ANANDARAJ
-#### Abisha JEYAVEL 
-#### Thushanthy THEIVENDIRAN
-#### Augusta Merveille TSAMPI MEZAGUE 
+<image src="images/banner.png" width=1000 center>
 
+ ![Deploy badge](https://github.com/EFREI-2024-ADDE92/ProjetGroupe4/actions/workflows/docker-image.yml/badge.svg?event=push)                    [<img src="https://img.shields.io/badge/dockerhub-hadolint/hadolint-blueviolet.svg?logo=docker">](https://hub.docker.com/r/hadolint/hadolint) 
+[<img src="https://img.shields.io/badge/Azure Container App-groupe4containerapp--bis-blue.svg?logo=microsoftazure">]()   [<img src="https://img.shields.io/badge/Docker-v4.16.2-blue.svg?logo=docker">](https://www.docker.com/)           [<img src="https://img.shields.io/badge/Docker--compose-v2.15.1-blue.svg?logo=docker">](https://www.docker.com/)
+[<img src="https://img.shields.io/badge/prom/prometheus-latest-orange.svg?logo=prometheus">](https://hub.docker.com/r/prom/prometheus/tags)
+[<img src="https://img.shields.io/badge/grafana/grafana-latest-important.svg?logo=grafana   ">](https://hub.docker.com/r/grafana/grafana/tags)
+[<img src="https://img.shields.io/badge/Flask-3.0.0-9cf.svg?logo=flask">](https://flask.palletsprojects.com/en/3.0.x/)
+[<img src="https://img.shields.io/badge/Scikit--learn-1.2.2-red.svg?logo=scikitlearn">](https://scikit-learn.org/stable/)
+
+***
+***
+
+## **Groupe 4** :
+
+- #### Frimpong ADOTRI
+- #### Suvéta ANANDARAJ
+- #### Abisha JEYAVEL 
+- #### Thushanthy THEIVENDIRAN
+- #### Augusta Merveille TSAMPI MEZAGUE 
+
+<br/>
 
 ---
-
-<img src="https://miro.medium.com/v2/resize:fit:1400/1*_sPi4LqKsepotYHWlH_32g.png" width=800>
-
-<img src="https://miro.medium.com/v2/resize:fit:1400/1*zqMeeKJJNGqbXr8WBKzdFw.png" width=800>
-
 ---
 ## 1. Objectif du projet : 
----
 
 Déployer, à travers d'une API, un modèle entraîné de prédiction en utilisant la philosophie
 DevOps sur un fournisseur de services cloud.
 
 <br/>
 
+***
 ---
 ## 2. Entrainement d'un modèle de KNN sur le dataset iris
----
+
+
+
 
 <br/>
 
+***
 ---
-## 3. Code Python modelApi.py
----
+## 3. Code Python `modelApi.py`
 
 Le but de ce script est de développer un serveur web utilisant Flask. Ce serveur a pour but de déployer le modèle de prédiction de classification d'espèces d'Iris via une API REST. 
 
@@ -40,17 +51,17 @@ Le code intègre aussi des métriques de suivi, utilisant Prometheus pour mesure
 
 Voici les métriques Prometheus définis : 
 
-- **python_request_operations_total** : Le nombre total de requetes traitées
-- **python_processing_time_seconds** : Temps de traitement de chaque prédiction
-- **python_iris_virginica_predictions_total** : Le nombre total de prédictions Iris-virginica
-- **python_iris_setosa_predictions_total** : Le nombre total de prédictions Iris-setosa
-- **python_iris_versicolor_predictions_total** : Le nombre total de prédictions Iris-versicolor
+- `python_request_operations_total` : Le nombre total de requetes traitées
+- `python_processing_time_seconds` : Temps de traitement de chaque prédiction
+- `python_iris_virginica_predictions_total` : Le nombre total de prédictions Iris-virginica
+- `python_iris_setosa_predictions_total` : Le nombre total de prédictions Iris-setosa
+- `python_iris_versicolor_predictions_total` : Le nombre total de prédictions Iris-versicolor
 
 <br/>
 
 Dans ce script, on définit deux endpoints : 
 
-- ```/predict``` pour effectuer des prédictions en utilisant le modèle entrainé dans le notebook **model_training.ipynb**s
+- ```/predict``` pour effectuer des prédictions en utilisant le modèle entrainé dans le notebook **model_training.ipynb**
 - ```/metrics``` pour exposer les métriques Prometheus. Il renvoie les métriques au format texte/plain. 
 
 <br/>
@@ -64,21 +75,21 @@ Dockerfile permet de configurer et créer rapidement une image Docker. Dans le D
 Voici les instructions pour notre image Docker :
 
 
-```bash
+```dockerfile
 FROM python:3.11-slim-bookworm
 ```
-- Notre image Docker va être créée à partir de l'image de ```python:3.11-slim-bookworm```   
+- Notre image Docker va être construite à partir de l'image de ```python:3.11-slim-bookworm```. Cette image ne comporte aucune vulnérabilité (cliquez [ici](https://hub.docker.com/layers/library/python/3.11-slim-bookworm/images/sha256-52cf1e24d0baa095fd8137e69a13042442d40590f03930388df49fe4ecb8ebdb?context=explore))
 
 <br/>
 
-```bash
+```dockerfile
 WORKDIR /app
 ```
 - On définit le dossier de travail pour les autres commandes comme RUN, CMD.
 
 <br/>
 
-```bash
+```dockerfile
 COPY iris_model.pkl /app
 COPY modelApi.py /app
 COPY requirements.txt /app
@@ -87,14 +98,14 @@ COPY requirements.txt /app
 
 <br/>
 
-```bash
+```dockerfile
 RUN pip install --no-cache-dir --requirement requirements.txt
 ```
 - On lance la commande pour installer les librairies définis dans le **requirements.txt**. 
 
 <br/>
 
-```bash
+```dockerfile
 CMD ["python", "modelApi.py"]
 ```
 - La commande **CMD​** spécifie l'instruction qui doit être exécutée au démarrage du conteneur Docker. On exécute la commande ```python modelApi.py``` en mode shell. 
@@ -108,7 +119,7 @@ CMD ["python", "modelApi.py"]
 Dans ```.github/workflows```, on crée le fichier de workflow ```docker-image.yml```. 
 
 
-```bash
+```yaml
 on:
   push:
     branches:
@@ -123,14 +134,14 @@ on:
 - Dans ```steps```, on définit les étapes de notre workflow : 
     - 1ère étape : ```Checkout GitHub Action``` : En utilisant l'action **actions/checkout@main**, on récupére notre code source 
    
-    ```bash
+    ```yaml
     name: 'Checkout GitHub Action'
     uses: actions/checkout@main
     ```
 
     - 2ème étape : ```Hadolint for check the code``` : En utilisant l'action **hadolint/hadolint-action@v3.1.0**, on vérifie la conformité du **Dockerfile** avec les pratiques définies par Hadolint
    
-    ```bash
+    ```yaml
     name: 'Hadolint for check the code' 
     uses: hadolint/hadolint-action@v3.1.0
     with:
@@ -139,7 +150,7 @@ on:
 
     - 3ème étape : ```Login via Azure CLI``` : Avec l'action **azure/login@v1**, on se connecte à Azure CLI en utilisant la variable AZURE_CREDENTIALS stockée dans les secrets GitHub.
    
-    ```bash
+    ```yaml
     name: 'Login via Azure CLI'
     uses: azure/login@v1
     with:
@@ -149,7 +160,7 @@ on:
 
     - 4ème étape : ```Create Container App Environment``` : En utilisant la commande Azure CLI, on crée un environnement d'application conteneurisée avec des paramètres tels que le groupe de ressources, le nom, et l'emplacement.
    
-    ```bash
+    ```yaml
     name: 'Create Container App Environment'
     run: |
     az containerapp env create \
@@ -160,7 +171,7 @@ on:
 
     - 5ème étape : ```Build and push image``` : Avec l'action **azure/login@v1**, on se connecte au registre Docker sur Azure avec les informations d'identification stockées dans les secrets GitHub. Puis, on construit l'image Docker à partir du **Dockerfile** avec la commande ```docker build```. Puis, on publie l'image Docker dans le registre Azure avec la commande ```docker push```.
    
-    ```bash
+    ```yaml
     name: 'Build and push image'
     uses: azure/docker-login@v1
     with:
@@ -174,7 +185,7 @@ on:
 
     - 6ème étape : ```Build and deploy Container App``` : En utilisant l'action **azure/container-apps-deploy-action@v1**, on déploie l'application conteneurisée sur Azure Container Apps. 
    
-    ```bash
+    ```yaml
     name: Build and deploy Container App
     uses: azure/container-apps-deploy-action@v1
     with:
@@ -194,34 +205,64 @@ on:
 
     - 7ème étape : ```Configure autoscaling``` : En utilisant la commande Azure CLI, on configure l'autoscaling de l'application conteneurisée. Cette règle d'autoscaling est basée sur la concurrence HTTP.
    
-    ```bash
-    name: 'Create Container App Environment'
-    run: |
-    az containerapp env create \
-        -g ${{ secrets.RESOURCE_GROUP }} \
-        -n groupe4containerapp-bis \
-        --location 'france central'
+    ```yaml
+    name: Configure autoscaling
+        run: |
+        az extension add --name containerapp
+        az containerapp update \
+            --name groupe4containerapp \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --scale-rule-name http-scale-rule \
+            --scale-rule-http-concurrency 5 
     ```
 
 <br/>
 
+***
 ---
 ## 6. Test de charge avec Locust
+
+Locust est un outil de test de charge qui se base sur un fichier spécifique appélé **locustfile.py**. Ce fichier permet de définir les actions que les simulateurs doit exécuter. Il doit être inclus dans le répertoire courant à partir duquel le daemon locust sera lancé. Le contenu de notre locustfile est le suivant :
+
+```python
+from locust import HttpUser, task
+
+class SimulatedUser(HttpUser):
+    @task
+    def hello_world(self):
+        self.client.get("/predict?sepL=5.1&petL=1.4&sepW=3.5&petW=0.1",name="/predict1")  # simulateur1
+        self.client.get("/predict?sepL=6.4&petL=5.3&sepW=2.3&petW=3.2",name="/predict2")  # simulateur2
+        self.client.get("/predict?sepL=5.1&petL=1.4&sepW=3.5&petW=0.1",name="/predict3")  # simulateur3
+        self.client.get("/predict?sepL=5.1&petL=1.4&sepW=3.5&petW=0.1",name="/predict4")  # simulateur4
+```
+
+On définit 4 simulateurs différents qui simuleront des envois de requêtes à l'endpoint `/predict`. Ensuite on lance le daemon locust avec la commande suivante:
+
+```sh
+$ locust --modern-ui -H "<HOSTNAME>"
+```
+\<HOSTNAME\> correspond au nom d'hôte de l'application cible (il peut s'agir d'une URL ou d'un nom de domaine. Exemple : `http://localhost:8081`).
+
+Pour accéder à l'interface graphique de locust, il faut entrer dans un navigateur: `localhost:8089`. Le **"Number of users"** est réparti parmi les 4 simulateurs (ils se dupliquent pour atteindre le nombre total). Le **"Ramp Up"** est le multiplicateur d'incrémentation du nombre d'utilisateurs simultanés par secondes. Les **"RPS (Requests per Second)"** correspondent au nombre de requêtes réussies par seconde et les **"Failure/s"** correspondent au nombre de requêtes échouées par seconde. Les **"Failure/s"** augmentent un certain temps avant de s'annuler. Ceci est dû au fait que les réplicats du container sont en cours de création. Un fois crées, ils permettent de supporter la charge des requêtes simultanées, ce qui a pour effet d'annuler le nombre de requêtes échouées.
+
+<img src="images/locust.gif" alt="locust-modern-ui" width=1000 href="none"></img>
+
+À la fin de la simulation, l'utilisateur peut générer un rapport statistique en HTML à télécharger. Ce rapport résume tous les événements de simulation.
+
+<br/>
+
+***
 ---
+## 7. Configuration de `docker-compose.yaml`
+
+
 
 <br/>
 
 ---
-## 7. Configuration de docker-compose.yaml
----
+## 8. Configuration de `prometheus.yaml`
 
-<br/>
-
----
-## 8. Configuration de prometheus.yaml
----
-
-```bash
+```yaml
 global:
   scrape_interval: 15s
   scrape_timeout: 10s
@@ -231,29 +272,91 @@ scrape_configs:
     metrics_path: '/metrics'
     static_configs:
       - targets: ['prometheus:9090', 'iris-api:8081']
+
+# scrapper les métriques de l'Azure container app
+  - job_name: 'azure-container-app'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['groupe4containerapp.thankfulrock-b2d0d37a.francecentral.azurecontainerapps.io']  #azure container application URL
 ```
 
-Ce fichier de configuration de Prometheus est utilisé pour scrapper les métriques à partir de differents services. Il scrape toutes les 15 secondes. On a définit un délai d'attente de 10 secondes. Si le scrapping prend plus de 10 secondes , elle sera interrompue. 
+Ce fichier de configuration de Prometheus est utilisé pour scrapper les métriques à partir de differents services. Il scrape toutes les 15 secondes. On a définit un délai d'attente de 10 secondes. Si le scrapping prend plus de 10 secondes , il sera interrompu.<br/>
+Un aperçu de l'inerface de Prometheus:
+
+<img src="images/prometheus.gif" alt="prometheus-ui" width=1000 href="none"></img>
 
 <br/>
 
+***
 ---
-## 8. Test
----
+## 9. Grafana
+
+Un aperçu de l'inerface de Grafana:
+
+<img src="images/grafana.gif" alt="grafana-ui" width=1000 href="none"></img>
 
 <br/>
 
+***
 ---
-## 9. Partie Bonus
+## 10. Test
+
+Pour tester notre application (Test en local):
+
+- **Étape 1 :** créer un environnement virtuel
+  ```sh
+  $ python3 -m venv venv
+  ```
+
+- **Étape 2 :** lancer l'environnement virtuel
+  ```sh
+  $ source venv/bin/activate
+  ```
+
+- **Étape 3 :** Installer **locust**
+  ```sh
+  $ pip install locust==2.20.1
+  ```
+
+- **Étape 4 :** Lancer la stack Docker
+  ```sh
+  $ docker-compose up
+  ```
+
+- **Étape 5 :** Exécuter une requête vers l'API REST
+  ```sh
+  #Example
+  $ curl "http://localhost:8081/predict?sepL=5.1&petL=1.4&sepW=3.5&petW=0.1"
+  ```
+
+- **Étape 6 :** Récuperer les métriques voulues de l'API REST 
+  ```sh
+  $ curl "http://localhost:8081/metrics"
+  ```
+
+- **Étape 7 :** Visualiser les métriques sur Grafana en connectant Grafana à Prometheus et en exécutant de requêtes PromQL
+
+- **Étape 8 (Optionnel):** Lancer le daemon locust pour le test de charge
+  ```sh
+  $ locust --modern-ui -H "http://localhost:8081"
+  ```
+
+<br/>
+
+<img src="images/test.gif" alt="test" width=1000 href="none"></img>
+
+
+<br/>
+
+***
 ---
+## 11. Partie Bonus
 
-- Utilisation d'un linter pour Dockerfile dans la pipeline de déploiement pour s'assurer de sa
-cohérence.
+- Utilisation d'un linter pour Dockerfile dans la pipeline de déploiement pour s'assurer de sa cohérence. <br/>
+À l'exécution de la commande suivante, on a 0 lint erreurs sur notre Dockerfile. 
 
-    À l'exécution de la commande suivante, on a 0 lint erreurs sur notre Dockerfile. 
-
-```bash
-docker run --rm -i hadolint/hadolint < Dockerfile
+```sh
+$ docker run --rm -i hadolint/hadolint < Dockerfile
 ```
 
 - Ajout d'un endpoint ```/metrics``` en utilisant la bibliothèque prometheus-client , exposant 5 métriques Prometheus définis. 
