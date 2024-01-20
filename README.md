@@ -159,8 +159,12 @@ on:
 
 - Dans ```steps```, on définit les étapes de notre workflow : 
 
+    <br/>
+
     - **1ère étape** : ```Checkout GitHub Action``` : En utilisant l'action **actions/checkout@main**, on récupére notre code source 
    
+   <br/>
+
     ```yaml
     name: 'Checkout GitHub Action'
     uses: actions/checkout@main
@@ -170,6 +174,8 @@ on:
 
     - **2ème étape** : ```Hadolint for check the code``` : En utilisant l'action **hadolint/hadolint-action@v3.1.0**, on vérifie la conformité du **Dockerfile** avec les pratiques définies par Hadolint
    
+   <br/>
+
     ```yaml
     name: 'Hadolint for check the code' 
     uses: hadolint/hadolint-action@v3.1.0
@@ -180,6 +186,8 @@ on:
     <br/>
 
     - **3ème étape** : ```Login via Azure CLI``` : Avec l'action **azure/login@v1**, on se connecte à Azure CLI en utilisant la variable AZURE_CREDENTIALS stockée dans les secrets GitHub.
+
+    <br/>
    
     ```yaml
     name: 'Login via Azure CLI'
@@ -192,6 +200,8 @@ on:
     <br/>
 
     - **4ème étape** : ```Create Container App Environment``` : En utilisant la commande Azure CLI, on crée un environnement d'application conteneurisée avec des paramètres tels que le groupe de ressources, le nom, et l'emplacement.
+
+    <br/>
    
     ```yaml
     name: 'Create Container App Environment'
@@ -205,6 +215,8 @@ on:
     <br/>
 
     - **5ème étape** : ```Build and push image``` : Avec l'action **azure/login@v1**, on se connecte au registre Docker sur Azure avec les informations d'identification stockées dans les secrets GitHub. Puis, on construit l'image Docker à partir du **Dockerfile** avec la commande ```docker build```. Puis, on publie l'image Docker dans le registre Azure avec la commande ```docker push```.
+
+    <br/>
    
     ```yaml
     name: 'Build and push image'
@@ -221,6 +233,8 @@ on:
     <br/>
 
     - **6ème étape** : ```Build and deploy Container App``` : En utilisant l'action **azure/container-apps-deploy-action@v1**, on déploie l'application conteneurisée sur Azure Container Apps. 
+
+    <br/>
    
     ```yaml
     name: Build and deploy Container App
