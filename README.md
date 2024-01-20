@@ -110,6 +110,7 @@ COPY iris_model.pkl /app
 COPY modelApi.py /app
 COPY requirements.txt /app
 ```
+
 <br/>
 
 - On copie le fichier **iris_model.pkl**, **modelApi.py** et **requirements.txt** dans le conteneur Docker à partir de notre machine. 
@@ -119,6 +120,7 @@ COPY requirements.txt /app
 ```dockerfile
 RUN pip install --no-cache-dir --requirement requirements.txt
 ```
+
 <br/>
 
 - On lance la commande pour installer les librairies définis dans le **requirements.txt**. 
@@ -128,6 +130,7 @@ RUN pip install --no-cache-dir --requirement requirements.txt
 ```dockerfile
 CMD ["python", "modelApi.py"]
 ```
+
 <br/>
 
 - La commande **CMD​** spécifie l'instruction qui doit être exécutée au démarrage du conteneur Docker. On exécute la commande ```python modelApi.py``` en mode shell. 
