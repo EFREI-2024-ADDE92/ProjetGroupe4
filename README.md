@@ -36,7 +36,17 @@ DevOps sur un fournisseur de services cloud.
 ---
 ## 2. Entrainement d'un modèle de KNN sur le dataset iris
 
+**Source des données** : https://raw.githubusercontent.com/frimpong-adotri-01/datasets/main/iris_dataset.csv
 
+**Notebook de training** : `model_training.ipynb`
+
+Nous avons procédé au preprocessing des données (Normalisation, splitting en train et test sets, encding des variables qualitatives) dans un premier temps. Ensuite, nous avons entraîné le modèle de KNN avec le paramètre `n_neighbors=3`. L'accuracy de ce modèle était plutôt satisfaisant (Accuracy $\simeq 0.97$).<br/>
+Cependant, afin d'améliorer le modèle, une cross-validation nous aidera à déterminer la valeur optimale du paramètre `n_neighbors`. On note la valeur optimale de `n_neighbors` comme 6 et on ré-entraîne le modèle avec cette valeur. Les résultats sont aussi satisfaissants : 
+- Accuracy $\simeq 0.97$
+- Precision $\simeq 0.97$
+- Recall $\simeq 0.97$
+
+Ce modèle est sauvegardé dans le fichier `iris_model.pkl` et servira de modèle de prédiction pour l'API REST.
 
 
 <br/>
@@ -85,6 +95,9 @@ FROM python:3.11-slim-bookworm
 ```dockerfile
 WORKDIR /app
 ```
+
+<br/>
+
 - On définit le dossier de travail pour les autres commandes comme RUN, CMD.
 
 <br/>
@@ -94,6 +107,8 @@ COPY iris_model.pkl /app
 COPY modelApi.py /app
 COPY requirements.txt /app
 ```
+<br/>
+
 - On copie le fichier **iris_model.pkl**, **modelApi.py** et **requirements.txt** dans le conteneur Docker à partir de notre machine. 
 
 <br/>
@@ -101,6 +116,8 @@ COPY requirements.txt /app
 ```dockerfile
 RUN pip install --no-cache-dir --requirement requirements.txt
 ```
+<br/>
+
 - On lance la commande pour installer les librairies définis dans le **requirements.txt**. 
 
 <br/>
@@ -108,13 +125,15 @@ RUN pip install --no-cache-dir --requirement requirements.txt
 ```dockerfile
 CMD ["python", "modelApi.py"]
 ```
+<br/>
+
 - La commande **CMD​** spécifie l'instruction qui doit être exécutée au démarrage du conteneur Docker. On exécute la commande ```python modelApi.py``` en mode shell. 
 
 <br/>
 
+***
 ---
 ## 5. Configuration de Github Action
----
 
 Dans ```.github/workflows```, on crée le fichier de workflow ```docker-image.yml```. 
 
@@ -125,21 +144,23 @@ on:
     branches:
       - main
 ```
-- Le workflow s'exécute quand on fait un ```push``` sur la branche ```main``` du dépôt Github. 
-
 <br/>
+
+- Le workflow s'exécute quand on fait un ```push``` sur la branche ```main``` du dépôt Github. 
 
 - Dans ```jobs```, on regroupe toutes les jobs, qui doivent être exécutées dans notre workflow. 
 
 - Dans ```steps```, on définit les étapes de notre workflow : 
-    - 1ère étape : ```Checkout GitHub Action``` : En utilisant l'action **actions/checkout@main**, on récupére notre code source 
+
+    - **1ère étape** : ```Checkout GitHub Action``` : En utilisant l'action **actions/checkout@main**, on récupére notre code source 
    
     ```yaml
     name: 'Checkout GitHub Action'
     uses: actions/checkout@main
     ```
+    <br/>
 
-    - 2ème étape : ```Hadolint for check the code``` : En utilisant l'action **hadolint/hadolint-action@v3.1.0**, on vérifie la conformité du **Dockerfile** avec les pratiques définies par Hadolint
+    - **2ème étape** : ```Hadolint for check the code``` : En utilisant l'action **hadolint/hadolint-action@v3.1.0**, on vérifie la conformité du **Dockerfile** avec les pratiques définies par Hadolint
    
     ```yaml
     name: 'Hadolint for check the code' 
@@ -148,7 +169,9 @@ on:
         dockerfile: ./Dockerfile 
     ```
 
-    - 3ème étape : ```Login via Azure CLI``` : Avec l'action **azure/login@v1**, on se connecte à Azure CLI en utilisant la variable AZURE_CREDENTIALS stockée dans les secrets GitHub.
+    <br/>
+
+    - **3ème étape** : ```Login via Azure CLI``` : Avec l'action **azure/login@v1**, on se connecte à Azure CLI en utilisant la variable AZURE_CREDENTIALS stockée dans les secrets GitHub.
    
     ```yaml
     name: 'Login via Azure CLI'
@@ -158,7 +181,9 @@ on:
         version: '2022-11-01-preview'
     ```
 
-    - 4ème étape : ```Create Container App Environment``` : En utilisant la commande Azure CLI, on crée un environnement d'application conteneurisée avec des paramètres tels que le groupe de ressources, le nom, et l'emplacement.
+    <br/>
+
+    - **4ème étape** : ```Create Container App Environment``` : En utilisant la commande Azure CLI, on crée un environnement d'application conteneurisée avec des paramètres tels que le groupe de ressources, le nom, et l'emplacement.
    
     ```yaml
     name: 'Create Container App Environment'
@@ -169,7 +194,9 @@ on:
         --location 'france central'
     ```
 
-    - 5ème étape : ```Build and push image``` : Avec l'action **azure/login@v1**, on se connecte au registre Docker sur Azure avec les informations d'identification stockées dans les secrets GitHub. Puis, on construit l'image Docker à partir du **Dockerfile** avec la commande ```docker build```. Puis, on publie l'image Docker dans le registre Azure avec la commande ```docker push```.
+    <br/>
+
+    - **5ème étape** : ```Build and push image``` : Avec l'action **azure/login@v1**, on se connecte au registre Docker sur Azure avec les informations d'identification stockées dans les secrets GitHub. Puis, on construit l'image Docker à partir du **Dockerfile** avec la commande ```docker build```. Puis, on publie l'image Docker dans le registre Azure avec la commande ```docker push```.
    
     ```yaml
     name: 'Build and push image'
@@ -183,7 +210,9 @@ on:
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/projetirisgroupe4:${{ github.sha }}
     ```
 
-    - 6ème étape : ```Build and deploy Container App``` : En utilisant l'action **azure/container-apps-deploy-action@v1**, on déploie l'application conteneurisée sur Azure Container Apps. 
+    <br/>
+
+    - **6ème étape** : ```Build and deploy Container App``` : En utilisant l'action **azure/container-apps-deploy-action@v1**, on déploie l'application conteneurisée sur Azure Container Apps. 
    
     ```yaml
     name: Build and deploy Container App
@@ -203,7 +232,9 @@ on:
         azureCredentials : ${{ secrets.AZURE_CREDENTIALS }}
     ```
 
-    - 7ème étape : ```Configure autoscaling``` : En utilisant la commande Azure CLI, on configure l'autoscaling de l'application conteneurisée. Cette règle d'autoscaling est basée sur la concurrence HTTP.
+    <br/>
+
+    - **7ème étape** : ```Configure autoscaling``` : En utilisant la commande Azure CLI, on configure l'autoscaling de l'application conteneurisée. Cette règle d'autoscaling est basée sur la concurrence HTTP.
    
     ```yaml
     name: Configure autoscaling
@@ -255,7 +286,59 @@ Pour accéder à l'interface graphique de locust, il faut entrer dans un navigat
 ---
 ## 7. Configuration de `docker-compose.yaml`
 
+Voici le contenu de `docker-compose.yaml` :
 
+```yaml
+version: '3'
+
+networks:
+  iris-api-net:
+    driver: bridge
+
+services:
+
+  iris-api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    networks:
+      - iris-api-net
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    networks:
+      - iris-api-net
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yaml
+
+
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - iris-api-net
+    env_file:
+        - .env
+    volumes:
+      - ./grafana:/var/lib/grafana
+      - ./grafana-provisioning:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+
+
+volumes:
+  prometheus_data:
+  grafana_data:
+```
 
 <br/>
 
@@ -362,3 +445,5 @@ $ docker run --rm -i hadolint/hadolint < Dockerfile
 - Ajout d'un endpoint ```/metrics``` en utilisant la bibliothèque prometheus-client , exposant 5 métriques Prometheus définis. 
 
 - Branchement de Prometheus à Grafana
+
+- Notre image docker de référence `python:3.11-slim-bookworm` ne comporte aucune vulnérabilité  (cliquez [ici](https://hub.docker.com/layers/library/python/3.11-slim-bookworm/images/sha256-52cf1e24d0baa095fd8137e69a13042442d40590f03930388df49fe4ecb8ebdb?context=explore)).
