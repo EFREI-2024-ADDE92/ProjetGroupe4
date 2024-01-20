@@ -256,7 +256,7 @@ on:
 
     <br/>
 
-    - **7ème étape** : ```Configure autoscaling``` : En utilisant la commande Azure CLI, on configure l'autoscaling de l'application conteneurisée. Cette règle d'autoscaling est basée sur la concurrence HTTP.
+    - **7ème étape** : ```Configure autoscaling``` : En utilisant la commande Azure CLI, on configure l'autoscaling de l'application conteneurisée. Cette règle d'autoscaling est basée sur la concurrence HTTP. On spécifie que l'on déclenche l'autoscaling dès que le nombre de requêtes simultanées atteint ou dépasse 5. 
    
     ```yaml
     name: Configure autoscaling
@@ -362,6 +362,24 @@ volumes:
   grafana_data:
 ```
 
+Dans ce fichier de configuration, nous définissons un réseau Docker et 3 conteneurs.
+#### Réseau : 
+- `iris-api-network` : ce réseau est de type bridge et permet la communication entre les différents services qui vont être créés.
+
+#### Services : 
+- `iris-api` : cette image est construite à partir du Dockerfile et elle permet d'exécuter notre API dans le port 8081.
+- `prometheus` : ce conteneur est créé à partir de l'image `prom/prometheus:latest`. Il s'expose au port 9090. On définit une variable d'environnement pour le fuseau horaire. 
+- `grafana` : le conteneur `grafana` s'appuie sur l'image `grafana/grafana:latest`. Il utilise les variables d'environnement, initiées dans le fichier .env, qui seront utilisées pour l'authentification dans Grafana.
+
+#### Volumes : 
+Les volumes `prometheus_data` et `grafana_data` ont été créés pour stocker les données de prometheus et grafana.
+
+Voici  le contenu du fichier .env
+```ini
+GF_SECURITY_ADMIN_PASSWORD=xxxxxxxxxx
+GF_SECURITY_ADMIN_USER=xxxxxxxxxx
+```
+L'utilisateur doit choisir un identifiant et un mot de passe qui lui sont propres.
 <br/>
 
 ---
@@ -385,8 +403,12 @@ scrape_configs:
       - targets: ['groupe4containerapp.thankfulrock-b2d0d37a.francecentral.azurecontainerapps.io']  #azure container application URL
 ```
 
-Ce fichier de configuration de Prometheus est utilisé pour scrapper les métriques à partir de differents services. Il scrape toutes les 15 secondes. On a définit un délai d'attente de 10 secondes. Si le scrapping prend plus de 10 secondes , il sera interrompu.<br/>
-Un aperçu de l'inerface de Prometheus:
+Ce fichier de configuration de Prometheus est utilisé pour scrapper les métriques à partir de differents services. Il scrape toutes les 15 secondes. On a définit un délai d'attente de 10 secondes. Si le scrapping prend plus de 10 secondes , il sera interrompu.
+<br/>
+On définit 2 jobs pour le scrapping. En fonction de la cible, on précise l'URL dans la balise `targets`.
+
+<br/>
+Un aperçu de l'interface de Prometheus:
 
 <img src="images/prometheus.gif" alt="prometheus-ui" width=1000 href="none"></img>
 
@@ -396,7 +418,7 @@ Un aperçu de l'inerface de Prometheus:
 ---
 ## 9. Grafana
 
-Un aperçu de l'inerface de Grafana:
+Un aperçu de l'interface de Grafana:
 
 <img src="images/grafana.gif" alt="grafana-ui" width=1000 href="none"></img>
 
@@ -450,6 +472,11 @@ Pour tester notre application (Test en local):
 
 <img src="images/test.gif" alt="test" width=1000 href="none"></img>
 
+On peut également visualiser le nombre de requêtes envoyés sur l'API via le portail Azure.
+
+<br/>
+
+<img src="images/azure_metrics.png" alt="test" width=1000 href="none"></img>
 
 <br/>
 
@@ -469,3 +496,9 @@ $ docker run --rm -i hadolint/hadolint < Dockerfile
 - Branchement de Prometheus à Grafana
 
 - Notre image docker de référence `python:3.11-slim-bookworm` ne comporte aucune vulnérabilité  (cliquez [ici](https://hub.docker.com/layers/library/python/3.11-slim-bookworm/images/sha256-52cf1e24d0baa095fd8137e69a13042442d40590f03930388df49fe4ecb8ebdb?context=explore)).
+
+
+## 12. Problèmes rencontrés
+
+- Difficultés rencontrées pour la configuration du github action, en particulier pour la configuration de l'autoscaling (plusieurs possibilités de configuration, utilisant l'extension `containerapp` ou directement Azure CLI) 
+- Difficultés pour connecter l'API à Prometheus dû au mauvais paramétrage du fichier prometheus.yaml
