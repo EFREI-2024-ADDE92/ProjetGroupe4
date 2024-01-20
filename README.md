@@ -88,6 +88,9 @@ Voici les instructions pour notre image Docker :
 ```dockerfile
 FROM python:3.11-slim-bookworm
 ```
+
+<br/>
+
 - Notre image Docker va être construite à partir de l'image de ```python:3.11-slim-bookworm```. Cette image ne comporte aucune vulnérabilité (cliquez [ici](https://hub.docker.com/layers/library/python/3.11-slim-bookworm/images/sha256-52cf1e24d0baa095fd8137e69a13042442d40590f03930388df49fe4ecb8ebdb?context=explore))
 
 <br/>
@@ -144,6 +147,7 @@ on:
     branches:
       - main
 ```
+
 <br/>
 
 - Le workflow s'exécute quand on fait un ```push``` sur la branche ```main``` du dépôt Github. 
@@ -158,6 +162,7 @@ on:
     name: 'Checkout GitHub Action'
     uses: actions/checkout@main
     ```
+
     <br/>
 
     - **2ème étape** : ```Hadolint for check the code``` : En utilisant l'action **hadolint/hadolint-action@v3.1.0**, on vérifie la conformité du **Dockerfile** avec les pratiques définies par Hadolint
