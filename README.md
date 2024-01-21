@@ -399,7 +399,7 @@ scrape_configs:
   - job_name: 'azure-container-app'
     metrics_path: '/metrics'
     static_configs:
-      - targets: ['groupe4containerapp.thankfulrock-b2d0d37a.francecentral.azurecontainerapps.io']  #azure container application URL
+      - targets: ['https://groupe4containerapp.happysea-c98f171c.francecentral.azurecontainerapps.io']  #azure container application URL
 ```
 
 Ce fichier de configuration de Prometheus est utilisé pour scrapper les métriques à partir de differents services. Il scrape toutes les 15 secondes. On a définit un délai d'attente de 10 secondes. Si le scrapping prend plus de 10 secondes , il sera interrompu.
@@ -457,14 +457,15 @@ Pour tester notre application (Test en local):
 
 - **Étape 6 :** Récuperer les métriques voulues de l'API REST 
   ```sh
-  $ curl "http://localhost:8081/metrics"
+  $ curl "http://localhost:8081/metrics"  # en local
+  $ curl "https://groupe4containerapp.happysea-c98f171c.francecentral.azurecontainerapps.io/metrics"  # sur Azure container app
   ```
 
 - **Étape 7 :** Visualiser les métriques sur Grafana en connectant Grafana à Prometheus et en exécutant de requêtes PromQL
 
 - **Étape 8 (Optionnel):** Lancer le daemon locust pour le test de charge
   ```sh
-  $ locust --modern-ui -H "<HOSTNAME>"
+  $ locust --modern-ui -H "https://groupe4containerapp.happysea-c98f171c.francecentral.azurecontainerapps.io"
   ```
 
 <br/>
