@@ -369,17 +369,16 @@ Dans ce fichier de configuration, nous définissons un réseau Docker et 3 conte
 #### Services : 
 - `iris-api` : cette image est construite à partir du Dockerfile et elle permet d'exécuter notre API dans le port 8081.
 - `prometheus` : ce conteneur est créé à partir de l'image `prom/prometheus:latest`. Il s'expose au port 9090. On définit une variable d'environnement pour le fuseau horaire. 
-- `grafana` : le conteneur `grafana` s'appuie sur l'image `grafana/grafana:latest`. Il utilise les variables d'environnement, initiées dans le fichier .env, qui seront utilisées pour l'authentification dans Grafana.
-
-#### Volumes : 
-Les volumes `prometheus_data` et `grafana_data` ont été créés pour stocker les données de prometheus et grafana.
-
-Voici  le contenu du fichier .env
+- `grafana` : le conteneur `grafana` s'appuie sur l'image `grafana/grafana:latest`. Il utilise les variables d'environnement, initiées dans le fichier `.env`, qui seront utilisées pour l'authentification dans Grafana. <br/>
+Voici  le contenu du fichier `.env` (l'utilisateur doit choisir un identifiant et un mot de passe qui lui sont propres)
 ```ini
 GF_SECURITY_ADMIN_PASSWORD=xxxxxxxxxx
 GF_SECURITY_ADMIN_USER=xxxxxxxxxx
 ```
-L'utilisateur doit choisir un identifiant et un mot de passe qui lui sont propres.
+
+#### Volumes : 
+Les volumes `prometheus_data` et `grafana_data` ont été créés pour stocker les données de prometheus et grafana.
+
 <br/>
 
 ---
@@ -465,14 +464,14 @@ Pour tester notre application (Test en local):
 
 - **Étape 8 (Optionnel):** Lancer le daemon locust pour le test de charge
   ```sh
-  $ locust --modern-ui -H "http://localhost:8081"
+  $ locust --modern-ui -H "<HOSTNAME>"
   ```
 
 <br/>
 
 <img src="images/test.gif" alt="test" width=1000 href="none"></img>
 
-On peut également visualiser le nombre de requêtes envoyés sur l'API via le portail Azure.
+On peut également visualiser le nombre de requêtes envoyés sur l'API (lors du test de charge) via le portail Azure.
 
 <br/>
 
